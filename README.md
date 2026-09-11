@@ -13,7 +13,7 @@ therefore latency. More steps do not guarantee a proportional visible-quality
 gain.
 
 This script loads the model once, performs one untimed 1-step warm-up, and then
-generates images at 8, 15, 25, and 40 steps. The warm-up populates MFlux's prompt
+generates images at 8, 15, and 25 steps. The warm-up populates MFlux's prompt
 cache and triggers MLX's lazy compilation before measurements begin. Wall-clock
 timing covers iterative generation and VAE decoding. It excludes model
 download/load, the warm-up, and image file writing.
@@ -26,7 +26,7 @@ download/load, the warm-up, and image file writing.
 - Quantization: stored 8-bit MLX checkpoint, fixed for every run
 - Scheduler: MFlux linear scheduler
 - Guidance scale: 3.5
-- Resolution: 768 × 512
+- Resolution: 512 × 320
 - Seed: 42
 
 The checkpoint is quantized so the 20B-parameter model is practical on this
@@ -43,10 +43,10 @@ Use the existing environment:
 /Users/nicholaskim/qwen-env/bin/python benchmark.py
 ```
 
-For a faster three-run benchmark:
+To choose a different sweep explicitly:
 
 ```bash
-/Users/nicholaskim/qwen-env/bin/python benchmark.py --steps 8 15 25
+/Users/nicholaskim/qwen-env/bin/python benchmark.py --steps 8 15 25 40
 ```
 
 Images are written to `outputs/`, and measurements are written to
@@ -59,7 +59,6 @@ Images are written to `outputs/`, and measurements are written to
 | 8 | Pending | [steps_8.png](outputs/steps_8.png) |
 | 15 | Pending | [steps_15.png](outputs/steps_15.png) |
 | 25 | Pending | [steps_25.png](outputs/steps_25.png) |
-| 40 | Pending | [steps_40.png](outputs/steps_40.png) |
 
 ## Generated images
 

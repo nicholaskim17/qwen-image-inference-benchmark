@@ -21,11 +21,11 @@ DEFAULT_MODEL = "mlx-community/Qwen-Image-2512-8bit"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--steps", type=int, nargs="+", default=[8, 15, 25, 40])
+    parser.add_argument("--steps", type=int, nargs="+", default=[8, 15, 25])
     parser.add_argument("--prompt", default=DEFAULT_PROMPT)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--width", type=int, default=768)
-    parser.add_argument("--height", type=int, default=512)
+    parser.add_argument("--width", type=int, default=512)
+    parser.add_argument("--height", type=int, default=320)
     parser.add_argument("--guidance", type=float, default=3.5)
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--output-dir", type=Path, default=Path("outputs"))
