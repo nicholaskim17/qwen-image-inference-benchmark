@@ -29,6 +29,12 @@ download/load, the warm-up, and image file writing.
 - Resolution: 512 × 320
 - Seed: 42
 
+Prompt:
+
+> A cinematic photo of a futuristic red sports car driving through downtown
+> Toronto at night, wet streets reflecting neon lights, detailed buildings,
+> realistic photography
+
 The checkpoint is quantized so the 20B-parameter model is practical on this
 machine. Quantization can affect quality, but it is held constant and is not a
 benchmark variable. The fixed seed recreates the same initial latent noise. The
@@ -56,20 +62,45 @@ Images are written to `outputs/`, and measurements are written to
 
 | Steps | Runtime (seconds) | Image |
 | ---: | ---: | --- |
-| 8 | Pending | [steps_8.png](outputs/steps_8.png) |
-| 15 | Pending | [steps_15.png](outputs/steps_15.png) |
-| 25 | Pending | [steps_25.png](outputs/steps_25.png) |
+| 8 | 22.47 | [steps_8.png](outputs/steps_8.png) |
+| 15 | 37.71 | [steps_15.png](outputs/steps_15.png) |
+| 25 | 82.25 | [steps_25.png](outputs/steps_25.png) |
+
+Measured on September 11, 2026. These are single-run wall-clock observations
+after the warm-up, not averages over repeated trials.
 
 ## Generated images
 
-Images will be embedded here after the benchmark completes.
+### 8 steps
+
+![Qwen-Image output at 8 inference steps](outputs/steps_8.png)
+
+### 15 steps
+
+![Qwen-Image output at 15 inference steps](outputs/steps_15.png)
+
+### 25 steps
+
+![Qwen-Image output at 25 inference steps](outputs/steps_25.png)
 
 ## Observations
 
-Observations will be recorded after inspecting the generated images and timing
-data. The intended comparison is whether added latency at higher step counts
-corresponds to visible improvements in composition, fine detail, reflections,
-and structural coherence for this prompt.
+1. Latency increased substantially with step count. The 15-step run took about
+   68% longer than 8 steps, while 25 steps took about 266% longer than 8 steps.
+   The 25-step run also showed a brief late-run slowdown, so the relationship was
+   not perfectly linear in this single trial.
+2. The main composition was already coherent at 8 steps: the car shape, wet
+   street, lighting, and buildings were all recognizable. At 15 and 25 steps,
+   reflections and body contours appeared somewhat cleaner and more developed,
+   but the gain was subtle compared with the extra runtime.
+3. Fine details such as signs, windows, and reflections changed across step
+   counts even with the same seed. A fixed seed fixes the initial noise, but a
+   different number of solver updates follows a different numerical trajectory.
+
+On this hardware and this test prompt, reducing inference steps substantially
+reduced latency. Beyond 15 steps, the visible quality improvement appeared
+relatively small compared with the additional runtime. This is a prompt-specific
+observation, not a claim that 15 steps is generally optimal.
 
 ## Limitations
 
