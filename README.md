@@ -12,7 +12,7 @@ more opportunities to refine the result, but each step adds transformer work and
 therefore latency. More steps do not guarantee a proportional visible-quality
 gain.
 
-This script loads the model once, performs one untimed 1-step warm-up, and then
+This script loads the model once, performs one untimed 2-step warm-up, and then
 generates images at 8, 15, and 25 steps. The warm-up populates MFlux's prompt
 cache and triggers MLX's lazy compilation before measurements begin. Wall-clock
 timing covers iterative generation and VAE decoding. It excludes model

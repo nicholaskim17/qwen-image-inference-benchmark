@@ -32,7 +32,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-warmup",
         action="store_true",
-        help="Skip the untimed 1-step run used to warm MLX and the prompt cache.",
+        help="Skip the untimed 2-step run used to warm MLX and the prompt cache.",
     )
     return parser.parse_args()
 
@@ -63,11 +63,13 @@ def main() -> None:
     )
 
     if not args.skip_warmup:
-        print("Warming up with 1 untimed step...")
+        print("Warming up with 2 untimed steps...")
         model.generate_image(
             seed=args.seed,
             prompt=args.prompt,
-            num_inference_steps=1,
+            # A single step reaches a degenerate endpoint for this scheduler; two
+            # steps are the smallest useful warm-up and its image is discarded.
+            num_inference_steps=2,
             width=args.width,
             height=args.height,
             guidance=args.guidance,
