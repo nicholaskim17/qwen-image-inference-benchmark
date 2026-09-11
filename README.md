@@ -41,22 +41,38 @@ benchmark variable. The fixed seed recreates the same initial latent noise. The
 prompt, resolution, model, guidance, scheduler, runtime, and hardware are also
 held constant. Only `num_inference_steps` changes.
 
+The linear scheduler defines the sequence of noise levels and the update made at
+each step. Guidance 3.5 is the classifier-free guidance scale: MFlux combines a
+prompt-conditioned and negative-prompt prediction to steer the image toward the
+prompt. Both affect the output, so both are fixed. MFlux implements the model
+with MLX, which runs natively on Apple Silicon and uses unified memory rather
+than requiring CUDA.
+
 ## Run it
 
-Use the existing environment:
+Install the pinned MFlux version in a virtual environment:
 
 ```bash
-/Users/nicholaskim/qwen-env/bin/python benchmark.py
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Then run the default sweep:
+
+```bash
+python benchmark.py
 ```
 
 To choose a different sweep explicitly:
 
 ```bash
-/Users/nicholaskim/qwen-env/bin/python benchmark.py --steps 8 15 25 40
+python benchmark.py --steps 8 15 25 40
 ```
 
 Images are written to `outputs/`, and measurements are written to
-`results.csv` after every completed generation.
+`results.csv` after every completed generation. The first run downloads about
+36 GB of public model files; that download is not included in benchmark timing.
 
 ## Results
 
