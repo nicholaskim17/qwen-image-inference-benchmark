@@ -29,6 +29,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--guidance", type=float, default=3.5)
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--output-dir", type=Path, default=Path("outputs"))
+    parser.add_argument(
+        "--skip-warmup",
+        action="store_true",
+        help="Skip the untimed 1-step run used to warm MLX and the prompt cache.",
+    )
     return parser.parse_args()
 
 
@@ -56,6 +61,18 @@ def main() -> None:
         quantize=None,
         model_config=ModelConfig.qwen_image(),
     )
+
+    if not args.skip_warmup:
+        print("Warming up with 1 untimed step...")
+        model.generate_image(
+            seed=args.seed,
+            prompt=args.prompt,
+            num_inference_steps=1,
+            width=args.width,
+            height=args.height,
+            guidance=args.guidance,
+            scheduler="linear",
+        )
 
     rows: list[dict[str, object]] = []
     for steps in args.steps:

@@ -12,9 +12,11 @@ more opportunities to refine the result, but each step adds transformer work and
 therefore latency. More steps do not guarantee a proportional visible-quality
 gain.
 
-This script loads the model once and generates images at 8, 15, 25, and 40
-steps. Wall-clock timing covers prompt encoding, iterative generation, and VAE
-decoding. It excludes the one-time model download/load and image file write.
+This script loads the model once, performs one untimed 1-step warm-up, and then
+generates images at 8, 15, 25, and 40 steps. The warm-up populates MFlux's prompt
+cache and triggers MLX's lazy compilation before measurements begin. Wall-clock
+timing covers iterative generation and VAE decoding. It excludes model
+download/load, the warm-up, and image file writing.
 
 ## Configuration
 
@@ -75,7 +77,6 @@ and structural coherence for this prompt.
 This is a small exploratory benchmark, not a comprehensive evaluation. It uses
 one prompt, one seed, one resolution, one quantized checkpoint, and one machine.
 Visible quality is assessed informally rather than with human ratings or an
-automated metric. The first generation may also include one-time MLX compilation
-costs, so timing should be interpreted as an end-to-end observed run rather than
-a perfectly isolated steady-state measurement. No result here establishes a
-universally optimal inference-step count.
+automated metric. Timing is a single observation per condition rather than a
+distribution from repeated runs, and background system load is uncontrolled. No
+result here establishes a universally optimal inference-step count.
